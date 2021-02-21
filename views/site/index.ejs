@@ -1,0 +1,215 @@
+    <%- include("layouts/header.ejs") %>
+    <%- include("layouts/navbar.ejs") %>
+
+    <% if( typeof msg !=='undefined' ){%>
+        <div class="alert alert-success" style="text-align: center;"> <%= msg %></div>
+
+    <%}%>
+
+    <div class="slider-area">
+        <!-- Slider -->
+        <div class="block-slider block-slider4">
+            <ul class="" id="bxslider-home4">
+                <% if( typeof products !=='undefined' ){ for(var i=0; i
+                    < products.length; i++){ %>
+                <li>
+                    <img src="/public/uploads/<%= products[i].photo %>" alt="Slider" width="60%">
+                    <div class="caption-group">
+                        <h2 class="caption title">
+                            <%= products[i].product_name %>
+                        </h2>
+                        <h4 class="caption subtitle"><%= products[i].desc %></h4>
+                       
+                    </div>
+                    
+                </li>
+
+                <% }} %> 
+                
+            </ul>
+        </div>
+        <!-- ./Slider -->
+    </div> <!-- End slider area -->
+
+    <div class="maincontent-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="latest-product">
+
+                        
+
+                        <h2 class="section-title">Latest Products</h2>
+
+                        <div class="product-carousel">
+
+
+                            <% if( typeof products !=='undefined' ){ for(var i=0; i
+                                < products.length; i++){ %>
+
+                                    <div class="single-product" style="text-align: center;">
+                                        <div class="product-f-image">
+                                            <img src="/public/uploads/<%= products[i].photo %>" alt="product image" style="max-height: 210px;">
+                                            
+                                        </div>
+
+                                        <h2><a href="single-product.html"><%= products[0].product_name %></a></h2>
+
+                                        <div class="product-carousel-price">
+                                            <ins><%= products[0].price %> PL.</ins>
+                                        </div>
+
+                                        <div class="col-12" >
+                                           
+                                            <%  if(typeof user != 'undefined'){  %>
+                                            
+                                            <div class="col-6" style="margin: 5px;"> 
+                                                <a href="" class="add-to-cart-link btn btn-success" onclick="addToCart(event, '<%= products[i].product_id  %>' , '<%= products[i].product_name  %>' , '<%= products[i].price  %>')"> Add to cart</a>
+                                            </div>
+
+                                            <%}%>
+
+                                           
+
+                                            <div class="col-6" style="margin: 5px;">
+                                                <a href="/product/<%= products[i].product_id %>" class="view-details-link btn btn-info" style="background-color: #5a88ca;"> Show details</a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                            <% }} %>
+
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End main content area -->
+
+    <div class="product-widget-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="single-product-widget">
+                        <h2 class="product-wid-title">Top Sellers</h2>
+
+                        <% if( typeof products !=='undefined' ){ for(var i=0; i
+                            < products.length; i++){ %>
+
+
+                        <div class="single-wid-product">
+                            <a href="/product/<%= products[i].product_id %>"><img src="/public/uploads/<%= products[i].photo %>" alt="product image"
+                                    class="product-thumb"></a>
+                            <h2><a href="#"><%= products[i].product_name%></a></h2>
+                           
+                            <div class="product-wid-price">
+                                <ins><%= products[i].price%></ins>
+                            </div>
+                        </div>
+
+                        <%}}%>
+
+
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="single-product-widget">
+                        <h2 class="product-wid-title">Recently Viewed</h2>
+
+                        <% if( typeof products !=='undefined' ){ for(var i=0; i
+                            < products.length; i++){ %>
+
+
+                        <div class="single-wid-product">
+                            <a href="/product/<%= products[i].product_id %>"><img src="/public/uploads/<%= products[i].photo %>" alt="product image"
+                                    class="product-thumb"></a>
+                            <h2><a href="#"><%= products[i].product_name%></a></h2>
+                           
+                            <div class="product-wid-price">
+                                <ins><%= products[i].price%></ins>
+                            </div>
+                        </div>
+
+                        <%}}%>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="single-product-widget">
+                        <h2 class="product-wid-title">Top New</h2>
+
+                        <% if( typeof products !=='undefined' ){ for(var i=0; i
+                            < products.length; i++){ %>
+
+
+                        <div class="single-wid-product">
+
+                            
+
+                            <a href="/product/<%= products[i].product_id %>"><img src="/public/uploads/<%= products[i].photo %>" alt="product image"
+                                    class="product-thumb"></a>
+                            <h2><a href="#"><%= products[i].product_name%></a></h2>
+                           
+                            <div class="product-wid-price">
+                                <ins><%= products[i].price%></ins>
+                            </div>
+                        </div>
+
+                        <%}}%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End product widget area -->
+
+    <script>
+
+        async function addToCart(event, product_id, product_name, price) {
+
+            // event.preventDefault();
+           
+            let product = {
+
+                product_id:    product_id,
+                product_name:  product_name,
+                price:  price
+
+            }
+
+            let res = await fetch("/add-to-cart", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(product)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 200) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+        /*--------------------------*/
+
+    </script>
+
+    <%- include("layouts/footer.ejs") %>
+
+   

@@ -1,0 +1,157 @@
+<%- include("layouts/header.ejs") %>
+<%- include("layouts/navbar.ejs") %>
+
+
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-content-right">
+                        <div class="woocommerce">
+                            <form method="post" action="#">
+                                <table cellspacing="0" class="shop_table cart">
+                                    <thead>
+                                        <tr>
+                                            <th class="product-remove">&nbsp;</th>
+                                            <th class="product-thumbnail">&nbsp;</th>
+                                            <th class="product-name">Product</th>
+                                            <th class="product-price">Price</th>
+                                            <th class="product-quantity">Quantity</th>
+                                            <th class="product-subtotal">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <% if(typeof cart !== 'undefined') {
+
+                                            for( var i = 0 ; i < cart.length; i++){%>
+                                        <tr class="cart_item">
+                                            <td class="product-remove">
+                                                <a title="Remove this item" class="remove" href="" onclick="delProduct(event, '<%= cart[i][0]  %>')" >×</a> 
+                                            </td>
+
+                                            <td class="product-remove">
+                                                <a title="Remove this item" class="remove" onclick="addToCart(event, '<%= cart[i][0]  %>' , '<%= cart[i][2].product_name  %>' , '<%= cart[i][2].price  %>')" href="" >+</a> 
+                                            </td>
+
+                                           
+
+
+                                            <td class="product-name">
+                                                <p><%= cart[i][2].product_name %></p> 
+                                            </td>
+
+                                            <td class="product-price">
+                                                <span class="amount"><%= cart[i][2].price %> LE.</span> 
+                                            </td>
+
+                                            <td class="product-quantity">
+                                                <div class="quantity buttons_added">
+
+                                                    <span><%= cart[i][1] %></span>
+                                                                                                        
+                                                </div>
+                                            </td>
+
+                                            <td class="product-quantity">
+                                                <div class="quantity buttons_added">
+
+                                                    <span><%= cart[i][1] * cart[i][2].price %></span>
+                                                                                                        
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                        <%}}%>
+                                        <tr>
+                                            <td class="actions" colspan="6">
+
+                                                <a href="/checkout" class="btn btn-primary" style="border-radius: 10px;" class="checkout-button button alt wc-forward"> Checkout </a>
+                                           
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+
+                        </div>                        
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        async function delProduct(event, id){
+            // event.preventDefault();
+
+            // alert(id);
+            let order = {
+                product_id : id
+            }
+            fetch('/remove-product', {
+                method: 'DELETE',
+                headers: {
+                "content-type": "application/json"
+                },
+                body: JSON.stringify(order)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        /*add to cart function*/
+        async function addToCart(event, product_id, product_name, price) {
+
+// event.preventDefault();
+
+let product = {
+
+    product_id:    product_id,
+    product_name:  product_name,
+    price:  price
+
+}
+
+let res = await fetch("/add-to-cart", {
+    method: "POST",
+    headers: {
+        "content-type": "application/json"
+    },
+    body: JSON.stringify(product)
+});
+
+let resJson = await res.json();
+
+if (resJson.statusCode == 200) {
+
+    res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+   
+
+} else {
+
+    res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+}
+}
+
+    </script>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+    <%- include("layouts/footer.ejs") %>

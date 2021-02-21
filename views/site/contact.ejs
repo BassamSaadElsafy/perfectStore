@@ -1,0 +1,140 @@
+<%- include("layouts/header.ejs") %>
+    <%- include("layouts/navbar.ejs") %>
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+
+
+                <div class="col-md-12">
+                    <div class="product-content-right">
+                        <div class="woocommerce">
+
+                            <div id="customer_details" class="col2-set">
+                                <div class="col-12">
+                                    <div class="woocommerce-billing-fields ">
+                                        <h3 class="text-center">Contact Us</h3>
+
+                                        <%  if(typeof error !== 'undefined'){  %>
+                                            <div class="form-group text-center alert alert-danger">
+
+                                                <%= error %>
+
+                                            </div>
+
+                                            <%}%>
+
+                                            <%  if(typeof success !== 'undefined'){  %>
+                                                <div class="form-group text-center alert alert-success">
+    
+                                                    <%= success %>
+                                                </div>
+    
+                                                <%}%>
+
+                                        <form action="/contact" method="post">
+
+                                            <div class="form-group  text-center" id="res_msg"></div>
+
+                                            <div class="form-row">
+
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputEmail4">Name</label>
+                                                    <input type="text" class="form-control" name="name" id="user_name"
+                                                        placeholder="Name">
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputPassword4">Email</label>
+                                                    <input type="text" class="form-control" name="email" id="email"
+                                                        placeholder="Email">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-row">
+
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputEmail4">Phone</label>
+                                                    <input type="text" class="form-control" name="phone" id="phone"
+                                                        placeholder="Phone">
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputEmail4">Subject</label>
+                                                    <input type="text" class="form-control" name="subject" id="subject"
+                                                        placeholder="Subject">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-row">
+
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlTextarea1">Message</label>
+                                                    <textarea class="form-control" id="msg" name="msg"
+                                                        rows="3"></textarea>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <button type="submit" onclick="send_msg(event)" class="btn btn-primary">Send</button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        async function send_msg(event) {
+
+            event.preventDefault();
+
+            let message = {
+                name: user_name.value,
+                email: email.value,     
+                phone: phone.value,
+                subject: subject.value,
+                msg: msg.value,
+              
+            }
+
+            let res = await fetch("/contact", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(message)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 201) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+
+    </script>
+
+    <%- include("layouts/footer.ejs") %>

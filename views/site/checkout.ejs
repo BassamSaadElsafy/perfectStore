@@ -1,0 +1,100 @@
+<%- include("layouts/header.ejs") %>
+    <%- include("layouts/navbar.ejs") %>
+
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+
+
+                <div class="col-md-12">
+                    <div class="product-content-right">
+                        <div class="woocommerce">
+
+                            <form enctype="multipart/form-data" action="/post-checkout" class="checkout" method="post"
+                                name="checkout">
+
+                                
+                                <h3 id="order_review_heading">Your order</h3>
+
+                                <div id="order_review" style="position: relative;">
+                                    <table class="shop_table">
+                                        <thead>
+                                            <tr>
+                                               
+                                                <th class="product-name">Product</th>
+                                                <th class="product-name">Price</th>
+                                                <th class="product-name">Quantity</th>
+                                                <th class="product-total">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <% if(typeof cart !== 'undefined') {
+
+                                                for( var i = 0 ; i < cart.length; i++){%>
+
+                                                <tr class="cart-subtotal">
+                                                    
+                                                    <td><%= cart[i][2].product_name %></td>
+
+                                                    <td><%= cart[i][2].price %></td>
+
+                                                    <td><%= cart[i][1] %></td>
+
+                                                    <td><span class="amount"><%= cart[i][2].price * cart[i][1]  %> LE.</span>
+                                                    </td>
+                                                </tr>
+                                                
+
+                                            <%}}%>
+
+                                            <% if(typeof total_price !== 'undefined'){ %>
+
+                                                <tr class="order-total">
+                                                    <th>Order Total</th>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><strong><span class="amount">
+
+                
+                                                    </span></strong> <%= total_price  %> LE. </td>
+                                                </tr>
+
+                                            <%}%>
+
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+
+                                    <div class="form-row place-order">
+
+                                        <input type="submit" data-value="Place order" value="Place order"
+                                            id="place_order" name="woocommerce_checkout_place_order" class="button alt">
+
+
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+
+    <%- include("layouts/footer.ejs") %>

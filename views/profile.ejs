@@ -1,0 +1,110 @@
+<%- include("site/layouts/header.ejs") %>
+<%- include("site/layouts/navbar.ejs") %> 
+<% if( typeof user !== 'undefined' ){%>   
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-6 border-right" style="text-align: center;">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-circle mt-5 img-thumbnail " src="https://i.imgur.com/O1RmJXT.jpg" width="120" style="border-radius: 50%;">
+                    
+                </div>
+                <div class="" style="text-align: center;">
+                    
+
+                    <p class="font-weight-bold"><b>
+
+                        <%= user.first_name + " " + user.last_name %>
+                
+                    </b></p>
+
+                   
+
+                    <p class="text-black-50" style="color: rgb(61, 117, 202);"><b>
+                        <%= user.email %>
+                    </b></p>
+                    <p><b><i><%= user.address %></i></b></p>
+
+                   
+                </div>
+            </div>
+            <div class="col-md-6 border-right">
+
+                    <div id="res_msg" style="text-align: center;"></div>
+                    <hr>
+                <div class="p-3 py-5">
+
+                    <input type="hidden" id="user_id" value="<%= user.user_id %>">
+                   
+                    <div class="row mt-2">
+                        <div class="col-md-6"><label class="labels">First Name</label><input type="text" class="form-control" value="<%= user.first_name %>" id="first_name" placeholder="first name" value="John"></div>
+                        <div class="col-md-6"><label class="labels">Last Name</label><input type="text" class="form-control" value="<%= user.last_name %>" id="last_name" placeholder="Last Name"></div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12"><label class="labels">Phone</label><input type="text"   class="form-control"  id="phone"           placeholder="Phone"         value="<%= user.phone %>"></div>
+                        <div class="col-md-12"><label class="labels">Address</label><input type="text" class="form-control"  id="address"           placeholder="Address"       value="<%= user.address %>"></div>
+                        <div class="col-md-12"><label class="labels">Email</label><input type="text"   class="form-control"  id="email"            placeholder="Email"         value="<%= user.email %>"></div>
+                        <div class="col-md-12"><label class="labels">Password</label><input type="password" class="form-control" id="password"></div>
+                        <div class="col-md-12"><label class="labels">Confirm Password</label><input type="password" class="form-control" id="conf_password"></div>
+
+                    </div>
+                  
+                    <hr>
+                    <div class="form-group">
+                        <div class="mt-5 text-center">
+                            <button class="btn btn-primary" onclick="updateProfile(event)" type="button">Edit Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <% } %>
+    
+
+    <script>
+
+        async function updateProfile(event) {
+
+            event.preventDefault();
+
+            let user = {
+                user_id: user_id.value,
+                first_name: first_name.value,
+                last_name: last_name.value,
+                phone: phone.value,
+                address: address.value,
+                email: email.value,
+                password: password.value,
+                conf_password: conf_password.value
+            }
+
+            let res = await fetch("/profile", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(user)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 200) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+
+    </script>
+
+
+<%- include("site/layouts/footer.ejs") %>

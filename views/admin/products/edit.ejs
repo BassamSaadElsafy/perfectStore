@@ -1,0 +1,151 @@
+<%- include("../layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            
+            
+            <!-- top navbar -->
+            <%- include("../layouts/top-nav.ejs") %>
+            <!-- end of top navbar -->
+
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+
+
+                    <!-- navbar -->
+
+                    <%- include("../layouts/navbar.ejs") %>
+
+                        <!-- end of navbar -->
+
+
+                        <div class="pcoded-content">
+                            <div class="pcoded-inner-content">
+                                <div class="main-body">
+                                    <div class="page-wrapper">
+
+                                        <div class="page-body">
+
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>Edit Product</h5>
+                                                    <div class="form-group text-center" id="res_msg"></div>
+
+                                                </div>
+                                                <div class="card-block">
+                                                    <form>
+
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Product Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="product_name" id="product_name" value="<%= product[0].product_name %>"
+                                                                    placeholder="Product Name">
+                                                            </div>
+                                                            <label class="col-sm-2 col-form-label">price</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="price" id="price" value="<%= product[0].price %>"
+                                                                    placeholder="Product Price">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Description</label>
+                                                            <div class="col-sm-10">
+                                                                <textarea rows="3" cols="5" class="form-control" name="desc" id="desc" placeholder="Product Description..."><%= product[0].desc %></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Product Image</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="file" class="form-control" name="product_img" id="product_img">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Stock</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="stock" id="stock" value="<%= product[0].stock %>"
+                                                                    placeholder="Stock">
+                                                            </div>
+                                                            <label class="col-sm-2 col-form-label">Category</label>
+                                                            <div class="col-sm-4">
+                                                                <select name="category_id" id="category_id" class="form-control" value="<%= product[0].category_id %>">
+
+                                                                    <% if(typeof categories !=='undefined'){
+                                                                        for(var x = 0; x < categories.length ; x ++){ %>
+
+                                                                        <option value="<%= categories[x].category_id %>" <%- categories[x].category_id == product[0].category_id ? 'selected' : '' %>><%= categories[x].category_name %></option>
+                                                                  
+                                                                    <%}}%>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <h4 class="sub-title"></h4> <!-- hr -->
+
+                                                        <button class="btn btn-grd-success" onclick="updateProduct(event, <%= product[0].product_id %>)" >Submit</button>
+                                                    </form>
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        async function updateProduct(event, id) {
+
+            event.preventDefault();
+
+            let product = {
+
+                product_name: product_name.value,
+                desc: desc.value,
+                price: price.value,
+                stock: stock.value,
+                category_id: category_id.value,
+                product_img: product_img.value
+            }
+
+            let res = await fetch("/api/dashboard/products/edit/"+id, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(product)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 200) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+
+    </script>
+
+
+    <%- include("../layouts/footer.ejs") %>

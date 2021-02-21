@@ -1,0 +1,104 @@
+<%- include("../layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            
+            <!-- top navbar -->
+            <%- include("../layouts/top-nav.ejs") %>
+            <!-- end of top navbar -->
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+
+
+                    <!-- navbar -->
+
+                    <%- include("../layouts/navbar.ejs") %>
+
+                        <!-- end of navbar -->
+
+
+                        <div class="pcoded-content">
+                            <div class="pcoded-inner-content">
+                                <div class="main-body">
+                                    <div class="page-wrapper">
+
+                                        <div class="page-body">
+
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>Add Category</h5>
+                                                </div>
+                                                <div class="card-block">
+
+                                                        <div class="form-group text-center" id="res_msg"></div>
+
+                                                    <form method="POST" action="/api/dashboard/categories/add">
+
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Category Name</label>
+                                                            <div class="col-sm-10"> 
+                                                                <input type="text" class="form-control" name="category_name" id="category_name"
+                                                                    placeholder="Category Name">
+                                                            </div>
+                                                            
+                                                        </div>
+
+                                                        <h4 class="sub-title"></h4> <!-- hr -->
+
+                                                        <button class="btn btn-grd-primary " onclick="addCategory(event)" >Submit</button>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        async function addCategory(event) {
+
+            event.preventDefault();
+
+            let category = {
+                category_name: category_name.value,
+               
+            }
+
+            let res = await fetch("/api/dashboard/categories/add", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(category)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 201) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+       
+    </script>
+
+    <%- include("../layouts/footer.ejs") %>

@@ -1,0 +1,216 @@
+<%- include("layouts/header.ejs") %>
+    <%- include("layouts/navbar.ejs") %>
+
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+
+                <div class="col-md-12">
+                    <div class="product-content-center display-flex ">
+                       
+                        <div class="row text-justify">
+                            <div class="col-sm-6">
+                                <div class="product-images">
+                                    <div class="product-main-img">
+                                        <img src="/public/uploads/<%= product.photo %>" alt="product image">
+                                    </div>
+                                </div>
+                            </div>                      
+
+                            <div class="col-sm-6">
+                                <% if (typeof msg !== 'undefined'){%>
+                                    <div class="form-group alert alert-success " style="text-align: center;"><%= msg %></div>
+                                    <hr>
+                                <%}%>
+                                <div class="product-inner">
+                                    <h2 class="product-name"><%= product.product_name %></h2>
+                                    <div class="product-inner-price">
+                                        <ins><%= product.price %> PL.</ins>
+                                    </div>
+                                    <%  if(typeof user != 'undefined'){  %>
+  
+                                        <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="70" rel="nofollow" onclick="addToCart(event, '<%= product.product_id  %>' , '<%= product.product_name  %>' , '<%= product.price  %>')" href="">Add to cart</a>
+
+                                    <%}%>
+
+
+                                    <div role="tabpanel">
+                                        <ul class="product-tab" role="tablist">
+                                            <li role="presentation" class="active"><a href="#home" aria-controls="home"
+                                                    role="tab" data-toggle="tab">Description</a></li>
+                                            <li role="presentation">
+                                                <% if ( typeof user === 'undefined'){%>
+                                                <a href="#profile" aria-controls="profile"
+                                                    role="tab" data-toggle="<%- typeof user !== 'undefined' ? 'tab' : 'modal' %>" data-target=" <%= typeof user !== 'undefined' ? 'false' : '#exampleModal' %> ">Reviews</a>
+                                                    <%}else{%>
+
+                                                    <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Reviews</a>
+                                                    <% } %>
+                                                </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane fade in active" id="home">
+                                                <h2>Product Description</h2>
+                                                <p><%= product.desc %></p>
+
+                                            </div>
+
+
+                                            <form action="/product/<%= product.product_id%>" method="post">
+
+                                                <%  if(typeof user != 'undefined'){  %>
+
+                                                <input type="hidden" id="user_id" name="user_id" value="<%= user.user_id %>">
+
+                                                <%}%>
+                                                <input type="hidden" id="product_id" name="product_id" value="<%= product.product_id %>">
+
+                                            <div role="tabpanel" class="tab-pane fade" id="profile">
+                                                <h2>Reviews</h2>
+
+
+                                                <% if ( typeof reviews !== 'undefined'){
+                                                    for(var i =0 ; i< reviews.length ; i++){    
+                                                %>
+                                                <div class="form-group">
+                                                   
+                                                        <% for (var x =0 ; x < users.length ; x++){
+                                                            if(users[x].user_id == reviews[i].user_id){%>
+                                                                <b>
+                                                                <%= users[x].first_name + " " + users[x].last_name %>
+                                                             </b>:
+                                                           
+                                                        <%} }%>
+                                                    
+                                                     <span> <%=reviews[i].content%></span> 
+                                                </div>
+                                                <hr>
+                                                <%}}%>
+
+
+                                                <div class="submit-review">
+   
+                                                  
+                                                    <p><label for="review">Your review</label> <textarea 
+                                                            id="content" name="content" cols="30" rows="10"></textarea></p>
+                                                    <!-- <p><input type="button" onclick="addReview(event)" value="Submit"></p> -->
+                                                    <p><input type="submit"  value="Submit"></p>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                            
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+
+
+
+
+    </div>
+</div>
+</div>
+
+    </div>
+
+      <script>
+
+        async function addToCart(event, product_id, product_name, price) {
+
+            // event.preventDefault();
+
+            // alert(product_id)
+            // alert(product_name)
+            // alert(price)
+           
+            let product = {
+
+                product_id:    product_id,
+                product_name:  product_name,
+                price:  price
+
+            }
+
+            let res = await fetch("/add-to-cart", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(product)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 200) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+
+        /*------------add comment on product--------------*/
+        async function addReview(event)
+        {
+
+            alert(product_id)
+            alert(user_id)
+
+            let review = {
+                product_id: product_id.value,
+                user_id:    user_id.value,
+                content:    content.value
+            }
+            fetch('/product/'+product_id , {
+                method: 'POST',
+                headers: {
+                "content-type": "application/json"
+                },
+                body: JSON.stringify(review)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+    </script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Welcome</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        You Should Sign In To comment on this product...
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="/login"  class="btn btn-primary">SignIn</a>
+        </div>
+    </div>
+    </div>
+</div>
+
+    
+      
+
+    <%- include("layouts/footer.ejs") %>

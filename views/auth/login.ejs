@@ -1,0 +1,112 @@
+<%- include("../site/layouts/header.ejs") %>
+    <%- include("../site/layouts/navbar.ejs") %>
+
+        <div class="single-product-area">
+            <div class="zigzag-bottom"></div>
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="product-content-right">
+                            <div class="woocommerce">
+
+
+                                <div id="customer_details" class="col2-set">
+                                    <div class="col-12">
+                                        <div class="woocommerce-billing-fields ">
+                                            <h3 class="text-center">Login Now</h3>
+                                            <%  if(typeof error !== 'undefined'){  %>
+                                            <div class="form-group text-center alert alert-danger" id="res_msg">
+
+                                                <%= error %>
+
+                                            <%}%>
+
+                                            <% if(typeof success !== 'undefined') {%>
+                                                <div class="alert alert-success" style="text-align: center;"> <%= success %></div>
+                                            <%}%>
+
+                                            </div>
+
+                                            <form action="/login" method="post">
+
+                                                <div class="form-row">
+
+                                                    <div class="form-group col-md-12">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" class="form-control" id="email" name="email"
+                                                            placeholder="Email">
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <label for="password">Password</label>
+                                                        <input type="password" class="form-control" id="password"
+                                                            name="password" placeholder="Password">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+
+                                                    <div class="form-group col-md-12">
+
+                                                        <button  onclick="login(event)" class="btn btn-primary">Sign in</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            async function login(event) {
+                // event.preventDefault();
+
+                let user = {
+                    email: email.value,
+                    password: password.value,
+                }
+
+                let res = await fetch("/login", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify(user)
+                });
+
+                let resJson = await res.json();
+
+                if (resJson.statusCode != 200) {
+                    // event.preventDefault();
+                    res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+                }else{
+                    // event.stop()
+                    res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.statusText} </span>`
+                }
+            }
+
+            /*--------------------------*/
+
+        </script>
+
+
+
+<br>
+<br>
+<br>
+<br>
+
+
+        <%- include("../site/layouts/footer.ejs") %>

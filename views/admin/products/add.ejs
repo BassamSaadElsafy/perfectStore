@@ -1,0 +1,201 @@
+<%- include("../layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+
+
+            <!-- top navbar -->
+            <%- include("../layouts/top-nav.ejs") %>
+                <!-- end of top navbar -->
+
+                <div class="pcoded-main-container">
+                    <div class="pcoded-wrapper">
+
+                        <!-- navbar -->
+
+                        <%- include("../layouts/navbar.ejs") %>
+
+                            <!-- end of navbar -->
+
+                            <div class="pcoded-content">
+                                <div class="pcoded-inner-content">
+                                    <div class="main-body">
+                                        <div class="page-wrapper">
+
+                                            <div class="page-body">
+
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>Add Product</h5>
+
+                                                        <% if(typeof msg !=='undefined' ){ %>
+                                                            <div class="form-group text-center alert alert-danger">
+
+                                                                <%= msg %>
+
+                                                                    <%}%>
+
+                                                                        <% if(typeof success !=='undefined' ){ %>
+                                                                            <div
+                                                                                class="form-group text-center alert alert-success">
+
+                                                                                <%= success %>
+
+                                                                                    <%}%>
+
+                                                                                        <div class="form-group text-center"
+                                                                                            id="res_msg"></div>
+
+                                                                            </div>
+                                                                            <div class="card-block">
+                                                                                <form
+                                                                                    action="/api/dashboard/products/add"
+                                                                                    method="post"
+                                                                                    enctype="multipart/form-data">
+
+                                                                                    <div class="form-group row">
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label">Product
+                                                                                            Name</label>
+                                                                                        <div class="col-sm-4">
+                                                                                            <input type="text"
+                                                                                                class="form-control"
+                                                                                                name="product_name"
+                                                                                                id="product_name"
+                                                                                                placeholder="Product Name">
+                                                                                        </div>
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label">price</label>
+                                                                                        <div class="col-sm-4">
+                                                                                            <input type="text"
+                                                                                                class="form-control"
+                                                                                                name="price" id="price"
+                                                                                                placeholder="Product Price">
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="form-group row">
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label">Description</label>
+                                                                                        <div class="col-sm-10">
+                                                                                            <textarea rows="3" cols="5"
+                                                                                                class="form-control"
+                                                                                                name="desc" id="desc"
+                                                                                                placeholder="Product Description..."></textarea>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="form-group row">
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label">Product
+                                                                                            Image</label>
+                                                                                        <div class="col-sm-10">
+                                                                                            <input type="file"
+                                                                                                class="form-control"
+                                                                                                name="product_img"
+                                                                                                id="product_img">
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="form-group row">
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label">Stock</label>
+                                                                                        <div class="col-sm-4">
+                                                                                            <input type="text"
+                                                                                                class="form-control"
+                                                                                                name="stock" id="stock"
+                                                                                                placeholder="Stock">
+                                                                                        </div>
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label">Category</label>
+                                                                                        <div class="col-sm-4">
+                                                                                            <select name="category_id"
+                                                                                                id="category_id"
+                                                                                                class="form-control">
+
+                                                                                                <% if(typeof categories
+                                                                                                    !=='undefined' ){
+                                                                                                    for(var x=0; x <
+                                                                                                    categories.length ;
+                                                                                                    x ++){ %>
+
+                                                                                                    <option
+                                                                                                        value="<%= categories[x].category_id %>">
+                                                                                                        <%= categories[x].category_name
+                                                                                                            %>
+                                                                                                    </option>
+                                                                                                    <!-- <option value="1">TV</option>
+                                                                    <option value="2">Phones</option>
+                                                                    <option value="3">Cars</option> -->
+
+                                                                                                    <%}}%>
+
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <h4 class="sub-title"></h4>
+                                                                                    <!-- hr -->
+
+                                                                                    <!-- <button class="btn btn-grd-primary " onclick="addProduct(event)">Submit</button> -->
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-grd-primary ">Submit</button>
+                                                                                </form>
+
+                                                                            </div>
+                                                            </div>
+
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <script>
+
+                    async function addProduct(event) {
+
+                        event.preventDefault();
+
+                        let product = {
+
+                            product_name: product_name.value,
+                            desc: desc.value,
+                            price: price.value,
+                            stock: stock.value,
+                            category_id: category_id.value,
+                            product_img: product_img.value
+
+                        }
+
+                        let res = await fetch("/api/dashboard/products/add", {
+                            method: "POST",
+                            headers: {
+                                "content-type": "application/json",
+                            },
+                            body: JSON.stringify(product)
+                        });
+
+                        let resJson = await res.json();
+
+                        if (resJson.statusCode == 201) {
+
+                            res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+
+
+                        } else {
+
+                            res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+                        }
+                    }
+
+
+                </script>
+                <%- include("../layouts/footer.ejs") %>

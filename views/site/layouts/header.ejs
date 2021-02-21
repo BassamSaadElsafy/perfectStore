@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Perfect Store</title>
+
+    <!-- Google Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,700,600' rel='stylesheet'
+        type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/owl.carousel.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+
+</head>
+
+<body>
+<div class="header-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
+                <div class="user-menu">
+                    <ul>
+                        <%  if(typeof user != 'undefined'){  %>
+                        <li><a href="/profile"><i class="fa fa-user"></i> My Account</a></li>
+                        <li><a href="/cart"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                        <% } %>
+
+                        <%  if(typeof user == 'undefined'){  %>
+
+                        <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
+                        <li><a href="/register"><i class="fa fa-user"></i> Register</a></li>
+
+                        <% }else{ %>
+
+                            <li><a href="/logout"><i class="fa fa-sign-in-alt"></i> Log out</a></li>
+                        
+                        
+                        <%}%>
+
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
+                <div class="shopping-item">
+                    <a href="/cart">Cart - <span class="cart-amunt">
+
+                        <% if(typeof total_price !== 'undefined'){ %>
+
+                            <%= total_price %>  LE.
+
+                        <%}else{%>
+                            Empty
+
+                            <%}%>
+
+                    </span> <i class="fa fa-shopping-cart"></i> <span class="product-count">
+
+                        <% if(typeof total_price !== 'undefined'){ %>
+                            <%= cart.length %>
+
+                        <%}else{%>
+                            0
+                            <%}%>
+
+                    </span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- End header area -->

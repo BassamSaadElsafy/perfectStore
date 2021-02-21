@@ -1,0 +1,160 @@
+<%- include("../site/layouts/header.ejs") %>
+    <%- include("../site/layouts/navbar.ejs") %>
+
+        <div class="single-product-area">
+            <div class="zigzag-bottom"></div>
+            <div class="container">
+                <div class="row">
+
+
+                    <div class="col-md-12">
+                        <div class="product-content-right">
+                            <div class="woocommerce">
+
+                                <div id="customer_details" class="col2-set">
+                                    <div class="col-12">
+                                        <div class="woocommerce-billing-fields ">
+                                            <h3 class="text-center">Registration Form</h3>
+
+                                            <% if(typeof error !== 'undefined') {%>
+                                                <div class="alert alert-danger" style="text-align: center;"> <%= error %></div>
+                                            <%}%>
+
+                                            <% if(typeof success !== 'undefined') {%>
+                                                <div class="alert alert-success" style="text-align: center;"> <%= success %></div>
+                                            <%}%>
+
+                                            <div class="form-group text-center" id="res_msg"></div>
+
+                                            <form action="/register" method="post">
+
+                                                <div class="form-row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="fname">Firdt Name</label>
+                                                        <input type="text" class="form-control" id="fname"
+                                                            name="first_name" placeholder="First Name">
+                                                    </div>
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="lname">Last Name</label>
+                                                        <input type="text" class="form-control" id="lname"
+                                                            name="last_name" placeholder="Last Name">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="address">Address</label>
+                                                    <input type="text" class="form-control" id="address" name="address"
+                                                        placeholder="1234 Main St">
+                                                </div>
+
+                                                <div class="form-row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="phone">Phone</label>
+                                                        <input type="text" class="form-control" id="phone" name="phone"
+                                                            placeholder="Phone">
+                                                    </div>
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="email">Email</label>
+                                                        <input type="text" class="form-control" id="email"
+                                                            placeholder="Email" name="email">
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="form-row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="password">Password</label>
+                                                        <input type="password" class="form-control" id="password" name="password"
+                                                            placeholder="Password" >
+                                                    </div>
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="conf_password">Confirm Password</label>
+                                                        <input type="password" class="form-control" id="conf_password" name="conf_password"
+                                                            placeholder="Confirm Password" >
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <button type="submit" 
+                                                        class="btn btn-primary">Sign Up</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            async function addUser(event) {
+                // event.preventDefault();
+
+                // alert(fname.value);
+                // alert(email.value);
+                // alert(lname.value);
+
+                let user = {
+                    first_name: fname.value,
+                    last_name: lname.value,
+                    address: address.value,
+                    phone: phone.value,
+                    email: email.value,
+                    password: password.value,
+                    conf_password: conf_password.value
+                }
+
+                // alert(user.email);
+
+                let res = await fetch("/register", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify(user)
+                });
+
+                // alert('===============');
+                // alert("user: "+JSON.stringify(user));
+
+                // alert("email: " + user.email);
+
+                // alert(res.statusCode);
+
+                let resJson = await res.json();
+
+                // alert(resJson.statusCode);
+
+                if (resJson.statusCode == 201) {
+                    // alert("User created successfully");
+                    res_msg.innerHTML = "<span class='alert alert-success'> Registration Successfully </span>"
+
+                } else {
+                    // alert("error happened")
+                    res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+                }
+            }
+
+            /*--------------------------*/
+
+        </script>
+
+        <%- include("../site/layouts/footer.ejs") %>

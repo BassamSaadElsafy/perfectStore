@@ -1,0 +1,196 @@
+<%- include("./layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+
+            <!-- top navbar -->
+            <%- include("./layouts/top-nav.ejs") %>
+            <!-- end of top navbar -->
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+
+
+                    <!-- navbar -->
+
+                    <%- include("./layouts/navbar.ejs") %>
+
+                    <!-- end of navbar -->
+
+
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <div class="main-body">
+                                <div class="page-wrapper">
+
+                                    <div class="page-body">
+                                      
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Edit Profile</h5>
+
+                                                <div class="res_msg"></div>
+
+                                                <% if(typeof msg !=='undefined' ){ %>
+                                                    <div class="form-group text-center alert alert-danger">
+
+                                                        <%= msg %>
+                                                    </div>
+
+                                                            <%}%>
+
+                                                                <% if(typeof success !=='undefined' ){ %>
+                                                                    <div
+                                                                        class="form-group text-center alert alert-success">
+
+                                                                        <%= success %>
+                                                                    </div>
+
+                                                                            <%}%>
+
+                                                                                <div class="form-group text-center"
+                                                                                    id="res_msg"></div>
+
+                                                                    </div>
+                                                                    <div class="card-block">
+                                                                        <form
+                                                                            action="/api/profile"
+                                                                            method="post"
+                                                                            enctype="multipart/form-data">
+
+                                                                            <input type="hidden" name="admin_id" id="admin_id" value="<%= user.user_id %>">
+
+                                                                            <div class="form-group row">
+                                                                                <label
+                                                                                    class="col-sm-2 col-form-label">First
+                                                                                    Name</label>
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="text" value="<%= user.first_name %>"
+                                                                                        class="form-control"
+                                                                                        name="first_name"
+                                                                                        id="first_name"
+                                                                                        placeholder="First Name">
+                                                                                </div>
+                                                                                <label
+                                                                                    class="col-sm-2 col-form-label">Last Name</label>
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="text" value="<%= user.last_name %>"
+                                                                                        class="form-control"
+                                                                                        name="last_name" id="last_name"
+                                                                                        placeholder="Last Name">
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group row">
+                                                                                <label
+                                                                                    class="col-sm-2 col-form-label">Phone
+                                                                                    </label>
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="text" value="<%= user.phone %>"
+                                                                                        class="form-control"
+                                                                                        name="phone"
+                                                                                        id="phone"
+                                                                                        placeholder="Phone">
+                                                                                </div>
+                                                                                <label
+                                                                                    class="col-sm-2 col-form-label">Email</label>
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="text"  value="<%= user.email %>"
+                                                                                        class="form-control"
+                                                                                        name="email" id="email"
+                                                                                        placeholder="Email">
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group row">
+                                                                                <label
+                                                                                    class="col-sm-2 col-form-label">Password
+                                                                                    </label>
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="password"
+                                                                                        class="form-control"
+                                                                                        name="password"
+                                                                                        id="password"
+                                                                                        placeholder="Password">
+                                                                                </div>
+                                                                                <label
+                                                                                    class="col-sm-2 col-form-label">Confirm Password</label>
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="password"
+                                                                                        class="form-control"
+                                                                                        name="conf_password" id="conf_password"
+                                                                                        placeholder="Confirm Password">
+                                                                                </div>
+                                                                            </div>
+
+                                                                          
+                                                                            <!-- hr -->
+
+                                                                            <button class="btn btn-grd-primary " onclick="updateProfile(event)">Submit</button>
+                                                                            <!-- <button type="submit" class="btn btn-grd-primary ">Submit</button> -->
+                                                                        </form>
+
+                                                                    </div>
+                                                    </div>
+
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <script>
+
+            async function updateProfile(event) {
+    
+                event.preventDefault();
+    
+                let admin = {
+    
+                    admin_id : admin_id.value,
+                    first_name: first_name.value,
+                    last_name: last_name.value,
+                    phone: phone.value,
+                    email: email.value,
+                    password: password.value,
+                    conf_password: conf_password.value
+                }
+    
+                let res = await fetch("/api/profile", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify(admin)
+                });
+    
+                let resJson = await res.json();
+    
+                if (resJson.statusCode == 200) {
+    
+                    res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+                   
+    
+                } else {
+    
+                    res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+    
+                }
+            }
+    
+    
+        </script>
+
+
+        <%- include("./layouts/footer.ejs") %>

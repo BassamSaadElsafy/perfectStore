@@ -1,0 +1,150 @@
+<%- include("../layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+
+            <!-- top navbar -->
+            <%- include("../layouts/top-nav.ejs") %>
+                <!-- end of top navbar -->
+
+                <div class="pcoded-main-container">
+                    <div class="pcoded-wrapper">
+
+                        <!-- navbar -->
+                        <%- include("../layouts/navbar.ejs") %>
+                            <!-- end of navbar -->
+
+                            <div class="pcoded-content">
+                                <div class="pcoded-inner-content">
+                                    <div class="main-body">
+                                        <div class="page-wrapper">
+
+                                            <div class="page-body">
+
+
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>Orders</h5>
+
+                                                        <% if(typeof error !== 'undefined') {%>
+                                                            <div class="alert alert-danger" style="text-align: center;"> <%= error %></div>
+                                                        <%}%>
+
+                                                        <% if(typeof success !== 'undefined') {%>
+                                                            <div class="alert alert-success" style="text-align: center;"> <%= success %></div>
+                                                        <%}%>
+                                                      
+                                                    </div>
+                                                    <div class="card-block table-border-style">
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Customer</th>
+                                                                        <th>address</th>
+
+                                                                        <th>total price</th>
+                                                                       
+                                                                        <th>Created At</th>
+                                                                        
+                                                                        <th>Delete</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    <% if( typeof orders !=='undefined' ){ for(var i=0; i
+                                                                        < orders.length; i++){ %>
+
+                                                                        <tr>
+                                                                            <th scope="row">
+                                                                                <%= orders[i].order_id %>
+                                                                            </th>
+
+                                                                            <% for(var x=0; x < users.length; x++){
+                                                                                if( orders[i].user_id == users[x].user_id){
+                                                                            %>
+                                                                            <td>
+                                                                                <%= users[x].first_name + " " + users[x].last_name %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= users[x].address %>
+                                                                             </td>
+
+                                                                           
+
+                                                                             <%}}%>
+
+                                                                            <td>
+                                                                                <%= orders[i].total_price %>
+                                                                            </td>
+
+                                                                            
+                                                                          
+                                                                            <td><%= orders[i].created_at %></td>
+
+                                                                           
+                                                                            <td>
+                                                                                <form action="/api/dashboard/orders">
+                                                                                   
+                                                                                    <button onclick="deleteOrder(event , <%= orders[i].order_id %>)"
+                                                                                        class="btn btn-danger btn-mini"><i class="ti-trash"
+                                                                                            style="font-size: 15px;    font-weight: bolder;"></i></button>
+                                                                                </form>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <% } }else{ %>
+
+                                                                            <div
+                                                                                class="form-group text-center alert alert-danger">
+                                                                                Table Is Empty</div>
+                                                                            <% } %>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <script>
+        async function deleteOrder(event, id) {
+
+            let order = {
+                order_id: id
+            }
+
+            let res = await fetch("/api/dashboard/orders", {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(order)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 201) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+    </script>
+    <%- include("../layouts/footer.ejs") %>

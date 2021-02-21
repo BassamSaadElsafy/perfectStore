@@ -1,0 +1,146 @@
+<%- include("../layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+
+            <!-- top navbar -->
+            <%- include("../layouts/top-nav.ejs") %>
+                <!-- end of top navbar -->
+
+                <div class="pcoded-main-container">
+                    <div class="pcoded-wrapper">
+
+                        <!-- navbar -->
+                        <%- include("../layouts/navbar.ejs") %>
+                            <!-- end of navbar -->
+
+                            <div class="pcoded-content">
+                                <div class="pcoded-inner-content">
+                                    <div class="main-body">
+                                        <div class="page-wrapper">
+
+                                            <div class="page-body">
+
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>Contacts</h5>
+
+                                                        <% if( typeof success !=='undefined' ){%>
+                                                            <div class="form-group text-center alert alert-success">
+
+                                                                <%= success %>
+
+                                                            </div>
+                                                        <%}%>
+
+
+                                                    </div>
+                                                    <div class="card-block table-border-style">
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Name</th>
+                                                                        
+                                                                        <th>Email</th>
+                                                                        <th>Phone</th>
+                                                                        <th>subject</th>
+                                                                        <th>Message</th>
+                                                                        <th>Delete</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    <% if( typeof contacts !=='undefined' ){ 
+                                                                        for(var i=0; i < contacts.length; i++){ %>
+
+                                                                        <tr>
+                                                                            <th scope="row">
+                                                                                <%= contacts[i].id %>
+                                                                            </th>
+                                                                            <th>
+                                                                                <%= contacts[i].name %>
+                                                                            </th>
+                                                                            <th>
+                                                                                <%= contacts[i].email %>
+                                                                            </th>
+                                                                            <th >
+                                                                                <%= contacts[i].phone %>
+                                                                            </th>
+                                                                            <th>
+                                                                                <%= contacts[i].subject %>
+                                                                            </th>
+                                                                            <td>
+                                                                                <%= contacts[i].message %>
+                                                                            </td>
+                                                                           
+
+                                                                            <td>
+                                                                                <form action="/api/dashboard/contacts" >
+                                                                                    <button onclick="deleteContact(event , <%= contacts[i].id %>)"
+                                                                                        class="btn btn-danger btn-mini"><i class="ti-trash"
+                                                                                            style="font-size: 15px;    font-weight: bolder;"></i></button>
+                                                                                </form>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <% } }else{ %>
+
+                                                                            <div
+                                                                                class="form-group text-center alert alert-danger">
+                                                                                Table Is Empty</div>
+                                                                            <% } %>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <script>
+                                async function deleteContact(event, id) {
+
+                                    let contact = {
+                                        contact_id: id
+                                    }
+
+                                    let res = await fetch("/api/dashboard/contacts", {
+                                        method: "DELETE",
+                                        headers: {
+                                            "content-type": "application/json"
+                                        },
+                                        body: JSON.stringify(contact)
+                                    });
+
+                                    let resJson = await res.json();
+
+                                    if (resJson.statusCode == 200) {
+
+                                        res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+                                        
+                                        
+
+                                    } else {
+
+                                        res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+                                    }
+
+                              
+                                        window.open("/api/dashboard/categories/");
+                                        
+                                }
+                            </script>
+
+                    </div>
+                </div>
+        </div>
+    </div>
+    <%- include("../layouts/footer.ejs") %>

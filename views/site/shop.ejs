@@ -1,0 +1,89 @@
+<%- include("layouts/header.ejs") %>
+<%- include("layouts/navbar.ejs") %>
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+
+                <% if( typeof products !=='undefined' ){ for(var i=0; i
+                    < products.length; i++){ %>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-shop-product" style="text-align: center;">
+                        <div class="product-upper" >
+                            <img src="/public/uploads/<%= products[i].photo %>" style="max-height: 130px" alt="product image">
+                        </div>
+                        <h2><a href="#details" ><%= products[i].product_name%></a></h2>
+                        <div class="product-carousel-price">
+                            <ins><%= products[i].price%></ins> 
+                        </div>  
+
+                        <!-- <input type="hidden" id="product" name="product" value="<%= products[i] %>"> -->
+                        
+                        <%  if(typeof user != 'undefined'){  %>
+                        <div class="product-option-shop">
+                            <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="70" rel="nofollow" onclick="addToCart(event, '<%= products[i].product_id  %>' , '<%= products[i].product_name  %>' , '<%= products[i].price  %>')" href="">Add to cart</a>
+                        </div> 
+                        <%}%>   
+
+
+                        <div class="product-option-shop">
+                            <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="70" rel="nofollow" href="/product/<%= products[i].product_id %>" style="background-color: #5cb85c;">Show Details</a>
+                        </div>                       
+                    </div>
+                </div>
+
+
+                <%}}%>
+
+               
+            </div>
+            
+           
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+        async function addToCart(event, product_id, product_name, price) {
+
+            // event.preventDefault();
+           
+            let product = {
+
+                product_id:    product_id,
+                product_name:  product_name,
+                price:  price
+
+            }
+
+            let res = await fetch("/add-to-cart", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(product)
+            });
+
+            let resJson = await res.json();
+
+            if (resJson.statusCode == 200) {
+
+                res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+               
+
+            } else {
+
+                res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+            }
+        }
+
+        /*--------------------------*/
+
+    </script>
+
+    <%- include("layouts/footer.ejs") %>

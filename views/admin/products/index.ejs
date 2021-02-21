@@ -1,0 +1,137 @@
+<%- include("../layouts/header.ejs") %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            
+            
+            <!-- top navbar -->
+            <%- include("../layouts/top-nav.ejs") %>
+            <!-- end of top navbar -->
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+
+                     <!-- navbar -->
+
+                    <%- include("../layouts/navbar.ejs") %>
+
+                    <!-- end of navbar -->
+
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <div class="main-body">
+                                <div class="page-wrapper">
+
+                                    <div class="page-body">                                   
+
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Products</h5>
+                                            </div>
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Description</th>
+                                                                <th>product image</th>
+                                                                <th>price</th>
+                                                                <th>stock</th>
+                                                                <th>category</th>
+                                                                <!-- <th>created at</th> -->
+                                                                <th>Edit</th>
+                                                                <th>Delete</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% if( typeof products !=='undefined' ){ for(var i=0; i
+                                                                < products.length; i++){ %>
+                                                            <tr>
+                                                                <th scope="row"><%= products[i].product_id %></th>
+                                                                <td><%= products[i].product_name %></td>
+                                                                <td><%= products[i].desc %></td>
+                                                                <td><img src="/public/uploads/<%= products[i].photo %>" alt="product image" class="img-thumbnail" width="50px">
+                                                                    
+                                                                    </td>
+                                                                <td><%= products[i].price %></td>
+                                                                <td><%= products[i].stock %></td>
+                                                                <td><%= products[i].category_id %></td>
+                                                                <!-- <td><%= products[i].created_at %></td> -->
+                                                                
+                                                                <td>
+                                                                    <a href="/api/dashboard/products/edit/<%= products[i].product_id %>"
+                                                                        class="btn btn-success btn-mini"><i
+                                                                            class="ti-pencil-alt"
+                                                                            style="font-size: 15px;    font-weight: bolder;"></i>
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    <form action="/api/dashboard/products">
+                                                                       
+                                                                        <!-- <input type="hidden" name="image_path" value="<%= products[i].photo %>"> -->
+                                                                        
+                                                                        <button onclick="deleteProduct(event , <%= products[i].product_id %>, '<%= products[i].photo %>')"
+                                                                            class="btn btn-danger btn-mini"><i class="ti-trash"
+                                                                                style="font-size: 15px;    font-weight: bolder;"></i></button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                            <% } }else{ %>
+
+                                                                <div
+                                                                    class="form-group text-center alert alert-danger">
+                                                                    Table Is Empty</div>
+                                                                <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+        <script>
+            async function deleteProduct(event, id,img_path) {
+
+                let product = {
+                    product_id: id,
+                    image_path: img_path
+                }
+
+                let res = await fetch("/api/dashboard/products", {
+                    method: "DELETE",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify(product)
+                });
+
+                let resJson = await res.json();
+
+                if (resJson.statusCode == 201) {
+
+                    res_msg.innerHTML = `<span class='alert alert-success'> ${resJson.statusText} </span>`
+
+                } else {
+
+                    res_msg.innerHTML = `<span class='alert alert-danger'> ${resJson.error} </span>`
+
+                }
+            }
+        </script>
+
+        <%- include("../layouts/footer.ejs") %>
